@@ -22,6 +22,9 @@ CREATE TABLE roles(
   salary DECIMAL(10,2) NOT NULL,
   -- Creates a numeric column called "department id " to hold reference to department to whoich role belongs to --
   department_id INT NOT NULL,
+  FOREIGN KEY (department)
+  REFERENCES department(id)
+  ON DELETE SET NULL
 );
 
 --creating table employee--
@@ -36,5 +39,12 @@ CREATE TABLE employee(
   role_id INT NOT NULL,
   -- Creates a numeric column called "manager id" to hold reference to another employee that is the manager of the current employee (null if the employee has no manager)--
   manager_id INT,
+  FOREIGN KEY (roles)
+  REFERENCES roles(id)
+  ON DELETE SET NULL
+--   FOREIGN KEY (manager_id)
+--   REFERENCES manager_id(id)
+--   ON DELETE SET NULL
+--   ON DELETE CASCADE?
 );
 

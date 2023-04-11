@@ -14,18 +14,18 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// // Connect to database
-// const db = mysql.createConnection(
-//     {
-//       host: 'localhost',
-//       // MySQL username,
-//       user: 'root',
-//       // MySQL password
-//       password: '',
-//       database: 'employee_db'
-//     },
-//     console.log(`Connected to the employee_db database.`)
-//   );
+// Connect to database
+const connection = mysql.createConnection(
+    {
+      host: 'localhost',
+      // MySQL username,
+      user: 'root',
+      // MySQL password
+      password: '',
+      database: 'employee_db'
+    },
+    console.log(`Connected to the employee_db database.`)
+  );
 
 //   // Hardcoded query: DELETE FROM course_names WHERE id = 3;
 
