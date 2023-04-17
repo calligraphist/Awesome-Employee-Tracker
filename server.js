@@ -22,7 +22,7 @@ const connection = mysql.createConnection(
   connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    // runs the app
+    // runs the application
     init();
 });
  
@@ -65,8 +65,9 @@ function init() {
              addDepartment();
              break;  
         case "Quit":
-            default:
-            quit();              
+             default:
+            //  quit();    
+               
      }
     });
 }
@@ -79,6 +80,19 @@ async function employees() {
         console.table(res);
         init();
 };
+
+async function roles() {
+    const [res] = await connection.promise().roles();
+
+    console.table(res);
+    init();
+  }
+  async function departments() {
+    const [res] = await connection.promise().departments();
+    console.table(res);
+    init();
+  }
+
 // corresponding function to the second case adds a new employee after asking for name, role, and manager
 async function addEmployee() {
     let positions = await connection.promise().query('SELECT id, title FROM roles');
@@ -123,7 +137,7 @@ async function addEmployee() {
 async function updateEmployee() {
     let employees = await connection.promise().query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
     employees.push({ id: null, name: "Cancel" });
-    let roles = await db.query('SELECT id, title FROM role');
+    let roles = await connection.promise().query('SELECT id, title FROM roles');
 
     inquirer.prompt([
         {
