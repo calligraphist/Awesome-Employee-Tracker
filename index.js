@@ -74,7 +74,7 @@ function init() {
 
 //corresponding function to the first case which builds complete employee table
 async function employees() {
-   let [res] = await connection.promise().query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN roles r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id'
+   let [res] = await connection.promise().query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN roles r ON e.roles_id = r.id INNER JOIN department d ON r.department_id = d.id'
         // if (err) throw err;
         );
         console.table(res);
@@ -82,13 +82,13 @@ async function employees() {
 };
 
 async function roles() {
-    const [res] = await connection.promise().roles();
+    let [res] = await connection.promise().query('SELECT roles r ON e.roles_id = r.id ');
 
     console.table(res);
     init();
   }
   async function departments() {
-    const [res] = await connection.promise().departments();
+    let [res] = await connection.promise().query();
     console.table(res);
     init();
   }
