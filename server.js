@@ -9,23 +9,20 @@ const consoletable = require('console.table');
 // Connect to database
 const connection = mysql.createConnection(
     {
-      host: 'localhost',
-      // MySQL username,
+      host: '127.0.0.1',
       port: 3306,
+      // MySQL username,
       user: 'root',
       // MySQL password
       password: '',
       database: 'employee_db'
-    },
-    console.log(`Connected to the employee_db database.`)
+    }
   );
 
   connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     // runs the app
-    //startScreen();
-    //firstPrompt();
     init();
 });
  
@@ -43,7 +40,7 @@ function init() {
             "Quit"], 
         }
     )
-    .then(response =>{
+    .then(response => {
         console.log("You entered: " + response.mainOptions);
      switch(response.mainOptions){
         case "View all employees":
@@ -76,7 +73,7 @@ function init() {
 
 //corresponding function to the first case which builds complete employee table
 async function employees() {
-    await db.query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id', (err, res) => {
+    await query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id', (err, res) => {
         if (err) throw err;
         console.table(res);
         init();
