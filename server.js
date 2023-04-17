@@ -73,16 +73,16 @@ function init() {
 
 //corresponding function to the first case which builds complete employee table
 async function employees() {
-    await query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id', (err, res) => {
-        if (err) throw err;
+   let [res] = await connection.promise().query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN roles r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id'
+        // if (err) throw err;
+        );
         console.table(res);
         init();
-    });
 };
 // corresponding function to the second case adds a new employee after asking for name, role, and manager
 async function addEmployee() {
-    let positions = await db.query('SELECT id, title FROM role');
-    let managers = await db.query('SELECT id, CONCAT(first_name, " ", last_name) AS Manager FROM employee');
+    let positions = await connection.promise().query('SELECT id, title FROM roles');
+    let managers = await connection.promise().query('SELECT id, CONCAT(first_name, " ", last_name) AS Manager FROM employee');
     managers.unshift({ id: null, Manager: "None" });
 
     inquirer.prompt([
@@ -110,10 +110,10 @@ async function addEmployee() {
             message: "Choose the employee's manager:",
             choices: managers.map(obj => obj.Manager)
         }
-    ]).then(answers => {
+    ]).then(async answers => {
         let positionDetails = positions.find(obj => obj.title === answers.role);
         let manager = managers.find(obj => obj.Manager === answers.manager);
-        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)", [[answers.firstName.trim(), answers.lastName.trim(), positionDetails.id, manager.id]]);
+       await connection.promise().query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)", [[answers.firstName.trim(), answers.lastName.trim(), positionDetails.id, manager.id]]);
         //console.log("\x1b[32m", `${answers.firstName} was added to the employee database!`);
         init();
     });
@@ -121,7 +121,7 @@ async function addEmployee() {
 
 // Updates the selected employee's role
 async function updateEmployee() {
-    let employees = await db.query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
+    let employees = await connection.promise().query('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
     employees.push({ id: null, name: "Cancel" });
     let roles = await db.query('SELECT id, title FROM role');
 
@@ -138,11 +138,11 @@ async function updateEmployee() {
             message: "Their role is changed to:",
             choices: roles.map(obj => obj.title)
         }
-    ]).then(answers => {
+    ]).then(async answers => {
         if (answers.Name != "Cancel") {
             let empID = employees.find(obj => obj.name === answers.Name).id
             let roleID = roles.find(obj => obj.title === answers.newRole).id
-            db.query("UPDATE employee SET role_id=? WHERE id=?", [roleID, empID]);
+           await connection.promise().query("UPDATE employee SET role_id=? WHERE id=?", [roleID, empID]);
             //console.log("\x1b[32m", `${answers.Name} new role is ${answers.newRole}`);
         }
         init();
