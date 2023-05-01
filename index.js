@@ -139,26 +139,6 @@ function departments() {
                 message: "Choose the employee's manager:",
                 choices: managers.map(obj => obj.Manager)
             }
-        // {
-        //   type: "input",
-        //   message: "What's the first name of the employee?",
-        //   name: "eeFirstName"
-        // },
-        // {
-        //   type: "input",
-        //   message: "What's the last name of the employee?",
-        //   name: "eeLastName"
-        // },
-        // {
-        //   type: "input",
-        //   message: "What is the employee's role id number?",
-        //   name: "roleID"
-        // },
-        // {
-        //   type: "input",
-        //   message: "What is the manager id number?",
-        //   name: "managerID"
-        // }
       ])
       .then(function(answer) {
   
@@ -220,7 +200,7 @@ function addRole() {
     .then(function(answer) {
 
 
-      connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.title, answer.salary, answer.dID], function(err, res) {
+      connection.query("INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)", [answer.title, answer.salary, answer.dID], function(err, res) {
         if (err) throw err;
         console.table(res);
         init();
