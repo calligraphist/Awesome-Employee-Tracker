@@ -246,7 +246,7 @@ function deleteDepartment() {
       choices: [
         "Leadership", "Security", "Finance", "Legal",      
         "Engineering ", "Leadership", "Security", "Finance", 
-        "Legal", "Engineering", "human resources", "HR",             
+        "Legal", "Engineering",             
         "Quit",
       ],
     })
@@ -254,7 +254,7 @@ function deleteDepartment() {
       connection.query(
         "REMOVE FROM department (name) VALUES (?)",
         [answer.deleteDepartment],
-        function (err, res) {
+        function (err, res) {no
           if (err) throw err;
           console.table(res);
           init();
