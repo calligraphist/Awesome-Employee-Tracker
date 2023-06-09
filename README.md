@@ -3,20 +3,15 @@
 ### Contents
 
 1. Discription of Project
-2. Screenshot
-3. Installation 
-4. Walkthrough video link
-5. Acknowledgements
-6. Questions
+2. Installation 
+3. Walkthrough video link
+4. Acknowledgements
+5. Contact for questions
 
 ## Description of Project
 This e-commerce Backend story is an application that is developed by using starter code and uses the command line interface (CLI) and object-relational mapping for various methods of data manipulation, storage, and retrieval when using HTTP methods with a RESTUL API.
 CLI Content Management System to manage a company's employees. The application links to an SQL database and allows users to view and manage employee records from the command line interface in a more user friendly environment.
 
-## Screenshot
-Following is the screenshot of my test README:
-![this fullfill all the requirements](./.png)
-![this fullfill all the requirements](./.png)
 
 ## Installation 
 
@@ -28,7 +23,9 @@ Git clone this repository using terminal and open the file in VS Code (or in the
 
 ## Acknowledgements
 
-This project is done for UNB Bootcamp, thanks for the opportunity. I am thankful to my instructor for the help. I am really thankful for askBCS, they explains some concepts.
+This project is done for UNB Bootcamp, thanks for the opportunity. I am thankful to my instructor for the help. I am really thankful for askBCS, they explains some concepts. code inspiration from andrewcmcghie, Nikstar-1 and DreissenZulu on github.
+
+
 
 ## Questions
 
