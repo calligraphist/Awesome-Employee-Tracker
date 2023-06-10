@@ -19,6 +19,15 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
+  console.log(`
+    ╔═══╗─────╔╗──────────────╔═╗╔═╗
+    ║╔══╝─────║║──────────────║║╚╝║║
+    ║╚══╦╗╔╦══╣║╔══╦╗─╔╦══╦══╗║╔╗╔╗╠══╦═╗╔══╦══╦══╦═╗
+    ║╔══╣╚╝║╔╗║║║╔╗║║─║║║═╣║═╣║║║║║║╔╗║╔╗╣╔╗║╔╗║║═╣╔╝
+    ║╚══╣║║║╚╝║╚╣╚╝║╚═╝║║═╣║═╣║║║║║║╔╗║║║║╔╗║╚╝║║═╣║
+    ╚═══╩╩╩╣╔═╩═╩══╩═╗╔╩══╩══╝╚╝╚╝╚╩╝╚╩╝╚╩╝╚╩═╗╠══╩╝
+    ───────║║──────╔═╝║─────────────────────╔═╝║
+    ───────╚╝──────╚══╝─────────────────────╚══╝`)
   // runs the application
   init();
 });
@@ -76,39 +85,60 @@ function init() {
     });
 }
 
-//corresponding function to the first case which builds complete employee table
-function departments() {
-  // select from the db
-  let query = "SELECT * FROM department";
-  connection.query(query, function (err, res) {
-    if (err) throw err;
+  async function departments() {
+    console.log("Viewing Departments\n");
+    let [res] = await connection.promise().query(`SELECT department.id,
+     department.name as Department FROM department`);
     console.table(res);
     init();
-  });
-  // show the result to the user (console.table)
-}
+  }
 
-function roles() {
-  // select from the db
-  let query = "SELECT * FROM roles";
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    init();
-  });
-  // show the result to the user (console.table)
-}
+async function employees() {
+  console.log("Viewing employees\n");
+    let [res] = await connection.promise().query(`SELECT employee.id, 
+    employee.first_name AS First_Name, employee.last_name AS Last_Name, roles.title AS Title,
+     roles.salary AS Salary, department.name AS Department,
+      CONCAT(manager.first_name, " ", manager.last_name) 
+      AS Manager FROM employee LEFT JOIN employee manager ON manager.id 
+      = employee.manager_id LEFT JOIN roles ON employee.roles_id = roles.id LEFT JOIN department
+      ON roles.department_id = department.id`
+         // if (err) throw err;
+         );
+         console.table(res);
+         init();
+ };
+ 
+ async function roles() {
+  console.log("Viewing Roles\n");
+     let [res] = await connection.promise().query(`SELECT roles.id, roles.title, roles.salary, 
+     department.name as Department FROM roles LEFT JOIN department ON roles.department_id= department.id `);
+ 
+     console.table(res);
+     init();
+   }
 
-function employees() {
-  // select from the db
-  let query = "SELECT * FROM employee";
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    init();
-  });
-  // show the result to the user (console.table)
-}
+
+   function addDepartment() {
+    inquirer
+      .prompt({
+        type: "input",
+        name: "newDep",
+        message: "provide the name of new department that you like to add.",
+      })
+      .then(function (answer) {
+        connection.query(
+          "INSERT INTO department (department.name) VALUES (?)",
+          [answer.newDep],
+          console.log("department added"),
+          function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            init();
+          }
+        );
+        init();
+      });
+  }
 
 function quit() {
   connection.end();
@@ -117,6 +147,7 @@ function quit() {
 
 function addEmployee() {
   inquirer
+  
     .prompt([
       {
         name: "firstName",
@@ -206,36 +237,29 @@ function addRole() {
     ])
     .then(function (answer) {
       connection.query(
-        "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
+        "INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)",
         [answer.title, answer.salary, answer.dID],
+        console.log("Role added"),
         function (err, res) {
           if (err) throw err;
           console.table(res);
           init();
         }
       );
+      init();
     });
 }
 
-function addDepartment() {
-  inquirer
-    .prompt({
-      type: "input",
-      name: "newDep",
-      message: "provide the name of new department that you like to add.",
-    })
-    .then(function (answer) {
-      connection.query(
-        "INSERT INTO department (name) VALUES (?)",
-        [answer.newDep],
-        function (err, res) {
-          if (err) throw err;
-          console.table(res);
-          init();
-        }
-      );
-    });
-}
+// const roleChoices= roles.map(({ id, title }) => ({
+//   name: title,
+//   value: id
+// }));
+//prompt({
+// type:"list",
+// name="roleID",
+// message:"What is the employee's role?",
+// choices: roleChoices
+//})
 
 // function deleteDepartment() {
 //   inquirer
@@ -264,25 +288,30 @@ function addDepartment() {
 //   }
   
 
-// async function employees() {
-//    let [res] = await connection.promise().query('SELECT e.id, e.first_name AS First_Name, e.last_name AS Last_Name, title AS Title, salary AS Salary, name AS Department, CONCAT(m.first_name, " ", m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN roles r ON e.roles_id = r.id INNER JOIN department d ON r.department_id = d.id'
-//         // if (err) throw err;
-//         );
-//         console.table(res);
-//         init();
-// };
-
-// async function roles() {
-//     let [res] = await connection.promise().query('SELECT roles r ON e.roles_id = r.id ');
-
+// function roles() {
+//   // select from the db
+//   let query = "SELECT * FROM roles";
+//   connection.query(query, function (err, res) {
+//     if (err) throw err;
 //     console.table(res);
 //     init();
-//   }
-//   async function departments() {
-//     let [res] = await connection.promise().query();
+//   });
+  // show the result to the user (console.table)
+//}
+
+// function employees() {
+//   console.log("Viewing employees\n");
+//   // select from the db
+//   let query = "SELECT * FROM employee";
+//   connection.query(query, function (err, res) {
+//     if (err) throw err;
 //     console.table(res);
 //     init();
-//   }
+//   });
+//   // show the result to the user (console.table)
+// }
+
+
 
 // corresponding function to the second case adds a new employee after asking for name, role, and manager
 // async function addEmployee() {
@@ -353,3 +382,16 @@ function addDepartment() {
 //         init();
 //     })
 // };
+
+// //corresponding function to the first case which builds complete employee table
+// function departments() {
+//   // select from the db
+//   let query = "SELECT * FROM department";
+//   connection.query(query, function (err, res) {
+//     if (err) throw err;
+//     console.table(res);
+//     init();
+//   });
+//   // show the result to the user (console.table)
+// }
+
