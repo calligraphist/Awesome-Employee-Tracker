@@ -147,7 +147,7 @@ function quit() {
 
 function addEmployee() {
   inquirer
-  
+
     .prompt([
       {
         name: "firstName",
@@ -204,7 +204,7 @@ function updateEmployee() {
     ])
     .then(function (answer) {
       connection.query(
-        "UPDATE employee SET role_id=? WHERE first_name= ?",
+        "UPDATE employee SET role=? WHERE first_name= ?",
         [answer.updateRole, answer.Name],
         function (err, res) {
           if (err) throw err;
@@ -216,7 +216,7 @@ function updateEmployee() {
 }
 
 function addRole() {
-  inquirer
+ inquirer
     .prompt([
       {
         type: "input",
