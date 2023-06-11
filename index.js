@@ -178,6 +178,7 @@ function addEmployee() {
       connection.query(
         "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
         [answer.firstName, answer.lastName, answer.role, answer.manager],
+        console.log("employee added"),
         function (err, res) {
           if (err) throw err;
           console.table(res);
@@ -255,23 +256,20 @@ function deleteDepartment() {
       .prompt({
         type: `input`,
         name: `deleteDep`,
-        message: `Which department would you like to delete?`,
-       // choices: await db.viewAllDepartments().map(({ id, name }) => ({name: options, value: id })),
-        // [
-        //   "Leadership", "Security", "Finance", "Legal",      
-        //   "Engineering "
-        // ],
+        message: `Which department would you like to delete? Enter id:`,
       })
       .then(function (answer) {
         connection.query(
-          "REMOVE FROM department (department.name) VALUES (?)",
+          "DELETE FROM department WHERE id = ?",
           [answer.deleteDep],
+          console.log("department deleted"),
           function (err, res) {
             if (err) throw err;
             console.table(res);
             init();
           }
         );
+        init();
       });
     }
 
