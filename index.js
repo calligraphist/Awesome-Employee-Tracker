@@ -80,7 +80,7 @@ function init() {
          break;
         case "Quit":
         default:
-          //quit();
+          quit();
       }
     });
 }
@@ -262,11 +262,11 @@ function deleteDepartment() {
         //   "Engineering "
         // ],
       })
-      .then(function (res) {
+      .then(function (answer) {
         connection.query(
-          "REMOVE FROM department (name) VALUES (?)",
+          "REMOVE FROM department (department.name) VALUES (?)",
           [answer.deleteDep],
-          function (err, res) {no
+          function (err, res) {
             if (err) throw err;
             console.table(res);
             init();
