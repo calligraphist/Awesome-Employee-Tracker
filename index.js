@@ -47,7 +47,7 @@ function init() {
         "Add role",
         "View all departments",
         "Add department",
-        //"Delete department",
+        "Delete department",
         "Quit",
       ],
     })
@@ -75,12 +75,12 @@ function init() {
         case "Add department":
           addDepartment();
           break;
-        // case "Delete department":
-        //   deleteDepartment();
-         // break;
+        case "Delete department":
+          deleteDepartment();
+         break;
         case "Quit":
         default:
-        //  quit();
+          //quit();
       }
     });
 }
@@ -123,7 +123,7 @@ async function employees() {
       .prompt({
         type: "input",
         name: "newDep",
-        message: "provide the name of new department that you like to add.",
+        message: "provide the name of new department that you like to add?",
       })
       .then(function (answer) {
         connection.query(
@@ -237,7 +237,7 @@ function addRole() {
     ])
     .then(function (answer) {
       connection.query(
-        "INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)",
+        "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
         [answer.title, answer.salary, answer.dID],
         console.log("Role added"),
         function (err, res) {
@@ -250,6 +250,31 @@ function addRole() {
     });
 }
 
+function deleteDepartment() {
+    inquirer
+      .prompt({
+        type: `input`,
+        name: `deleteDep`,
+        message: `Which department would you like to delete?`,
+       // choices: await db.viewAllDepartments().map(({ id, name }) => ({name: options, value: id })),
+        // [
+        //   "Leadership", "Security", "Finance", "Legal",      
+        //   "Engineering "
+        // ],
+      })
+      .then(function (res) {
+        connection.query(
+          "REMOVE FROM department (name) VALUES (?)",
+          [answer.deleteDep],
+          function (err, res) {no
+            if (err) throw err;
+            console.table(res);
+            init();
+          }
+        );
+      });
+    }
+
 // const roleChoices= roles.map(({ id, title }) => ({
 //   name: title,
 //   value: id
@@ -261,31 +286,7 @@ function addRole() {
 // choices: roleChoices
 //})
 
-// function deleteDepartment() {
-//   inquirer
-//     .prompt({
-//       type: `list`,
-//       name: `options`,
-//       message: `Which department would you like to delete?`,
-//       choices: 
-//       //await db.viewAllDepartments().map(({ id, name }) => ({name: options, value: id })),
-//       [
-//         "Leadership", "Security", "Finance", "Legal",      
-//         "Engineering "
-//       ],
-//     })
-//     .then(function (res) {
-//       connection.query(
-//         "REMOVE FROM department (name) VALUES (?)",
-//         [answer.deleteDepartment],
-//         function (err, res) {no
-//           if (err) throw err;
-//           console.table(res);
-//           init();
-//         }
-//       );
-//     });
-//   }
+// 
   
 
 // function roles() {
