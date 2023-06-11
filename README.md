@@ -19,7 +19,7 @@ Git clone this repository using terminal and open the file in VS Code (or in the
 
 ## Walkthrough video link
 
-
+https://watch.screencastify.com/v/8vRR4qBkVMZGIfnv8pWf 
 
 ## Acknowledgements
 

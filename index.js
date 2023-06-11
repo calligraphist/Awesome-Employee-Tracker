@@ -194,19 +194,19 @@ function updateEmployee() {
     .prompt([
       {
         type: "input",
-        message: "First name of the employee you like to update?",
+        message: "id of the employee you like to update?",
         name: "Name",
       },
 
       {
         type: "input",
-        message: "What do you want to update role to?",
+        message: "What do you want to update role to? provide id please:",
         name: "updateRole",
       },
     ])
     .then(function (answer) {
       connection.query(
-        "UPDATE employee SET role=? WHERE first_name= ?",
+        "UPDATE employee SET roles_id=? WHERE id= ?",
         [answer.updateRole, answer.Name],
         console.log("updated"),
         function (err, res) {
